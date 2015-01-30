@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>require via service wroker</title>
+    <!-- Module handling -->
+    <!-- All further JS code is loaded from javascript -->
+    <script src='./require.js'></script>
+    <script>
+        var readURL = function(url) {
+            return new Promise(function(resolve, reject) {
+                var request = new XMLHttpRequest();
+                request.open("GET", url, true);
+                request.onload = resolve;
+                request.onerror = reject;
+                request.send();
+            })
+        }
+        require.config({
+            //scriptType: "text/javascript;version=1.8",
+            nodeIdCompat: true,
+            urlArgs: "module=commonjs"
+        });
+        navigator.serviceWorker
+                 .register("transpile.js", {scope: './'})
+                 .then(function(registration) {
+                    console.log("registered", registration);
+                    require(["main"]);
+                 }).catch(function(error) {
+                    console.error(error)
+                 });
+    </script>
+  </head>
+
+  <body></body>
+</html>
